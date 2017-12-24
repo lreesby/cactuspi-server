@@ -1,0 +1,12 @@
+{
+  "parse": {
+    "appId": "parse app id",
+    "jsKey": "javascript key",
+    "masterKey": "master key"
+  },
+  "weather": {
+    "openWeatherMapApi": "weather api key",
+    "city": "city",
+    "unit": "metric"
+  }
+}

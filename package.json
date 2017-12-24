@@ -1,0 +1,24 @@
+{
+  "name": "cactuspi-server",
+  "version": "0.0.1",
+  "description": "A raspberry pi server manages messages to be sent to a pi client.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dannielum/cactuspi-server.git"
+  },
+  "author": "Danny Lum",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dannielum/cactuspi-server/issues"
+  },
+  "homepage": "https://github.com/dannielum/cactuspi-server#readme",
+  "dependencies": {
+    "parse": "^1.11.0",
+    "request": "^2.83.0"
+  }
+}
