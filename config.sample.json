@@ -1,8 +1,9 @@
 {
-  "parse": {
-    "appId": "parse app id",
-    "jsKey": "javascript key",
-    "masterKey": "master key"
+  "pubnub": {
+    "subscribeKey": "",
+    "publishKey": "",
+    "secretKey": "",
+    "channel": "cactuspi"
   },
   "weather": {
     "openWeatherMapApi": "weather api key",
