@@ -1,21 +1,43 @@
 const fs = require('fs');
 const request = require('request');
 const PubNub = require('pubnub');
+const express = require('express');
 
 const configFile = fs.readFileSync('./config.json');
 const config = JSON.parse(configFile);
+const { weather, pubnub } = config;
 
-async function run(config) {
-  const { weather, pubnub } = config;
+const pubNub = new PubNub({
+  publishKey: pubnub.publishKey,
+  subscribeKey: pubnub.subscribeKey,
+  secretKey: pubnub.secretKey,
+  ssl: true
+});
 
-  const weatherUrl = `http://api.openweathermap.org/data/2.5/weather?zip=${weather.city}&units=${weather.unit}&appid=${weather.openWeatherMapApi}`;
+const app = express();
 
-  const pubNub = new PubNub({
-    publishKey: pubnub.publishKey,
-    subscribeKey: pubnub.subscribeKey,
-    secretKey: pubnub.secretKey,
-    ssl: true
+app.get('/weather', function (req, res) {
+  getWeather();
+});
+
+app.get('/hello', function (req, res) {
+  publishMessage('Hello World!', {
+    'repeat': false,
+    'name': 'hello',
+    'duration': 5,
+    'priority': true
   });
+});
+
+const server = app.listen(8081, function () {
+  const host = server.address().address;
+  const port = server.address().port;
+
+  console.log("Cactus Pi Server started at http://%s:%s", host, port);
+});
+
+function getWeather() {
+  const weatherUrl = `http://api.openweathermap.org/data/2.5/weather?zip=${weather.city}&units=${weather.unit}&appid=${weather.openWeatherMapApi}`;
 
   request(weatherUrl, (err, response, body) => {
     if (err) {
@@ -40,27 +62,29 @@ async function run(config) {
     const message = `${result.name} - ${temperature} ${condition}`;
     console.log('weather', message);
 
-    pubNub.publish(
-      {
-        message,
-        channel: pubnub.channel,
-        sendByPost: false,
-        storeInHistory: false,
-        meta: {
-          'repeat': true,
-          'name': 'weather',
-          'duration': 60,
-          'priority': false
-        }
-      }, (status, response) => {
-        if (status.error) {
-          console.log('PubNub', status)
-        } else {
-          console.log('PubNub: Published with timetoken', response.timetoken)
-        }
-      }
-    );
+    publishMessage(message, {
+      'repeat': true,
+      'name': 'weather',
+      'duration': 60,
+      'priority': false
+    });
   });
 }
 
-run(config).then(() => console.log('Cactus Pi Server Started!'));
+function publishMessage(message, meta) {
+  pubNub.publish(
+    {
+      message,
+      channel: pubnub.channel,
+      sendByPost: false,
+      storeInHistory: false,
+      meta
+    }, (status, response) => {
+      if (status.error) {
+        console.log('PubNub', status)
+      } else {
+        console.log('PubNub: Published with timetoken', response.timetoken)
+      }
+    }
+  );
+}
