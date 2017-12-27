@@ -17,10 +17,12 @@ const pubNub = new PubNub({
 const app = express();
 
 app.get('/weather', function (req, res) {
+  res.send('getting weather...');
   getWeather();
 });
 
 app.get('/hello', function (req, res) {
+  res.send('hello...');
   publishMessage('Hello World!', {
     'repeat': false,
     'name': 'hello',
