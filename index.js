@@ -16,12 +16,12 @@ const pubNub = new PubNub({
 
 const app = express();
 
-app.get('/weather', function (req, res) {
+app.get('/weather', (req, res) => {
   res.send('getting weather...');
   getWeather();
 });
 
-app.get('/hello', function (req, res) {
+app.get('/hello', (req, res) => {
   res.send('hello...');
   publishMessage('Hello World!', {
     'repeat': false,
@@ -31,11 +31,48 @@ app.get('/hello', function (req, res) {
   });
 });
 
-const server = app.listen(8081, function () {
-  const host = server.address().address;
-  const port = server.address().port;
+app.get('/message/:message', (req, res) => {
+  const message = req.params.message;
+  res.send(`displaying "${message}"...`);
+  publishMessage(message, {
+    'repeat': req.param('repeat') || false,
+    'name': req.param('name') || 'message',
+    'duration': req.param('duration') || 10,
+    'priority': req.param('message') || true
+  });
+});
 
-  console.log("Cactus Pi Server started at http://%s:%s", host, port);
+app.get('/clear', (req, res) => {
+  res.send('clearing all messages...');
+  publishMessage('clear', {
+    'command': 'clear'
+  });
+});
+
+app.get('/stop', (req, res) => {
+  res.send('stopping...');
+  publishMessage('stop', {
+    'command': 'stop'
+  });
+});
+
+app.get('/start', (req, res) => {
+  res.send('starting...');
+  publishMessage('start', {
+    'command': 'start'
+  });
+});
+
+app.get('/end', (req, res) => {
+  res.send('ending...');
+  publishMessage('end', {
+    'command': 'end'
+  });
+});
+
+const server = app.listen(8081, () => {
+  const address = server.address();
+  console.log('Cactus Pi Server started at http://%s:%s', address.address, address.port);
 });
 
 function getWeather() {
