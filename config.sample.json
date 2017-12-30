@@ -6,8 +6,15 @@
     "channel": "cactuspi"
   },
   "weather": {
-    "openWeatherMapApi": "weather api key",
+    "apiKey": "weather api key",
     "city": "city",
     "unit": "metric"
+  },
+  "bustime": {
+    "apiKey": "bustime api key",
+    "lineRef": "MTA NYCT_<BUS NUMBER>",
+    "directionRef": 0,
+    "monitoringRef": 0,
+    "maximumStopVisits": 5
   }
 }

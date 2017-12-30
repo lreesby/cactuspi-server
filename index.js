@@ -2,10 +2,11 @@ const fs = require('fs');
 const request = require('request');
 const PubNub = require('pubnub');
 const express = require('express');
+const BusTime = require('mta-bustime');
 
 const configFile = fs.readFileSync('./config.json');
 const config = JSON.parse(configFile);
-const { weather, pubnub } = config;
+const { pubnub } = config;
 
 const pubNub = new PubNub({
   publishKey: pubnub.publishKey,
@@ -18,7 +19,12 @@ const app = express();
 
 app.get('/weather', (req, res) => {
   res.send('getting weather...');
-  getWeather();
+  getWeather(config.weather);
+});
+
+app.get('/bustime', (req, res) => {
+  res.send('getting bustime...');
+  getBusTime(config.bustime);
 });
 
 app.get('/hello', (req, res) => {
@@ -75,8 +81,8 @@ const server = app.listen(8081, () => {
   console.log('Cactus Pi Server started at http://%s:%s', address.address, address.port);
 });
 
-function getWeather() {
-  const weatherUrl = `http://api.openweathermap.org/data/2.5/weather?zip=${weather.city}&units=${weather.unit}&appid=${weather.openWeatherMapApi}`;
+function getWeather(weather) {
+  const weatherUrl = `http://api.openweathermap.org/data/2.5/weather?zip=${weather.city}&units=${weather.unit}&appid=${weather.apiKey}`;
 
   request(weatherUrl, (err, response, body) => {
     if (err) {
@@ -104,9 +110,45 @@ function getWeather() {
     publishMessage(message, {
       'repeat': true,
       'name': 'weather',
-      'duration': 60,
+      'duration': 20,
       'priority': false
     });
+  });
+}
+
+function getBusTime({ apiKey, lineRef, directionRef, monitoringRef, maximumStopVisits }) {
+  const busTime = new BusTime(apiKey);
+  busTime.stopMonitoring({
+    LineRef: lineRef,
+    DirectionRef: directionRef,
+    MonitoringRef: monitoringRef,
+    MaximumStopVisits: maximumStopVisits
+  }, (err, res, body) => {
+    if (err) {
+      console.error('BusTime', err);
+      return;
+    }
+    let total = 0;
+    let message = '';
+    const stopMonitoringDelivery = body.Siri.ServiceDelivery.StopMonitoringDelivery;
+    stopMonitoringDelivery.forEach(stopMonitoring => {
+      const monitoredStopVisit = stopMonitoring.MonitoredStopVisit;
+      monitoredStopVisit.forEach(stopVisit => {
+        const monitoredVehicleJourney = stopVisit.MonitoredVehicleJourney;
+        const { PresentableDistance, StopsFromCall } = monitoredVehicleJourney.MonitoredCall.Extensions.Distances;
+        message += `${monitoredVehicleJourney.LineRef.replace('MTA NYCT_', '')} is ${StopsFromCall > 0 ? `${StopsFromCall} stop${StopsFromCall === 1 ? '' : 's'} away and ` : ''}${PresentableDistance}. `;
+      });
+    });
+
+    console.log(message);
+    if (total > 0) {
+      publishMessage(message, {
+        'repeat': false,
+        'name': 'bustime',
+        'duration': 15 * total,
+        'priority': false
+      });
+    }
   });
 }
 
