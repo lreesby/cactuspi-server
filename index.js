@@ -137,6 +137,7 @@ function getBusTime({ apiKey, lineRef, directionRef, monitoringRef, maximumStopV
         const monitoredVehicleJourney = stopVisit.MonitoredVehicleJourney;
         const { PresentableDistance, StopsFromCall } = monitoredVehicleJourney.MonitoredCall.Extensions.Distances;
         message += `${monitoredVehicleJourney.LineRef.replace('MTA NYCT_', '')} is ${StopsFromCall > 0 ? `${StopsFromCall} stop${StopsFromCall === 1 ? '' : 's'} away and ` : ''}${PresentableDistance}. `;
+        total ++;
       });
     });
 
