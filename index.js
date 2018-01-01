@@ -40,7 +40,7 @@ app.get('/hello', (req, res) => {
 app.get('/message/:message', (req, res) => {
   const message = req.params.message;
   res.send(`displaying "${message}"...`);
-  publishMessage(message, {
+  publishMessage(`Message: ${message}`, {
     'repeat': req.param('repeat') || false,
     'name': req.param('name') || 'message',
     'duration': req.param('duration') || 10,
@@ -108,7 +108,7 @@ function getWeather(weather) {
     console.log('weather', message);
 
     publishMessage(message, {
-      'repeat': true,
+      'repeat': false,
       'name': 'weather',
       'duration': 20,
       'priority': false
