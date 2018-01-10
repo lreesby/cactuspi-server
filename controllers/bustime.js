@@ -3,20 +3,21 @@ const BusTime = require('mta-bustime');
 module.exports = class Bustime {
   constructor(config, publisher) {
     this._publisher = publisher;
-    this._lineRef = config._lineRef;
+    this._lineRef = config.lineRef;
     this._directionRef = config.directionRef;
     this._monitoringRef = config.monitoringRef;
     this._maximumStopVisits = config.maximumStopVisits;
-    this._busTime = new BusTime(this._apiKey);
+    this._busTime = new BusTime(config.apiKey);
   }
 
   fetch() {
-    this._busTime.stopMonitoring({
+    const options = {
       LineRef: this._lineRef,
       DirectionRef: this._directionRef,
       MonitoringRef: this._monitoringRef,
       MaximumStopVisits: this._maximumStopVisits
-    }, (err, res, body) => {
+    };
+    this._busTime.stopMonitoring(options, (err, res, body) => {
       if (err) {
         throw new Error(`BusTime: ${err}`);
       }
