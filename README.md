@@ -8,3 +8,4 @@ A Raspberry Pi server to manage messages to be sent to a client.
 - Weather
 - Bus time
 - Message
+- Subway
