@@ -4,6 +4,7 @@ const express = require('express');
 const Publisher = require('./services/publisher');
 const Weather = require('./controllers/weather');
 const Bustime = require('./controllers/bustime');
+const Subway = require('./controllers/subway');
 const CommandManager = require('./controllers/command-manager');
 
 const configFile = fs.readFileSync('./config.json');
@@ -12,6 +13,7 @@ const config = JSON.parse(configFile);
 const publisher = new Publisher(config.pubnub);
 const weather = new Weather(config.weather, publisher);
 const bustime = new Bustime(config.bustime, publisher);
+const subway = new Subway(config.subway, publisher);
 const commandManager = new CommandManager(publisher);
 
 const app = express();
@@ -24,6 +26,11 @@ app.get('/weather', (req, res) => {
 app.get('/bustime', (req, res) => {
   bustime.fetch();
   res.send('Bustime fetched');
+});
+
+app.get('/subway', (req, res) => {
+  subway.fetch();
+  res.send('Subway fetched');
 });
 
 app.get('/hello', (req, res) => {

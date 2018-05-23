@@ -9,17 +9,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dannielum/cactuspi-server.git"
+    "url": "git+https://github.com/lreesby/cactuspi-server.git"
   },
   "author": "Danny Lum",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dannielum/cactuspi-server/issues"
+    "url": "https://github.com/lreesby/cactuspi-server/issues"
   },
-  "homepage": "https://github.com/dannielum/cactuspi-server#readme",
+  "homepage": "https://github.com/lreesby/cactuspi-server#readme",
   "dependencies": {
     "express": "^4.16.2",
+    "lodash": "^4.17.10",
     "mta-bustime": "^1.0.0",
+    "mta-gtfs": "^1.1.0",
     "pubnub": "^4.19.0",
     "request": "^2.83.0"
   }
