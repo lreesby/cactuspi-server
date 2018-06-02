@@ -21,7 +21,7 @@
     "express": "^4.16.2",
     "lodash": "^4.17.10",
     "mta-bustime": "^1.0.0",
-    "mta-gtfs": "^1.1.0",
+    "mta-gtfs-lr": "^1.1.0",
     "pubnub": "^4.19.0",
     "request": "^2.83.0"
   }

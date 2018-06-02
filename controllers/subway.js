@@ -1,5 +1,8 @@
-var Mta = require('mta-gtfs');
+var Mta = require('mta-gtfs-lr');
 var _ = require('lodash');
+var Time = require('../helpers/time');
+
+const timeHelper = new Time();
 
 process.on('unhandledRejection', (reason, p) => {
   console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
@@ -26,11 +29,33 @@ module.exports = class Subway {
     }).catch(function (err) {
       console.log(err);
     });
+
     var nextTrains = _.get(results, `schedule.${this._lineRef}.${this._directionRef}`, []);
+    var toPrint = "";
+    var trainsPrinted = 0;
+    var trainIndex = 0;
+    var numTrains = 1;
+
     console.log(JSON.stringify(nextTrains, null, 2));
-    this._publisher.publish('Hello World!', {
+
+    while (trainsPrinted <= numTrains && trainIndex < _.size(nextTrains)) {
+      var diff = timeHelper.getTimeDif(nextTrains[trainIndex].arrivalTime, null);
+      if(diff >= 0) {
+        var minTilTrain = parseInt(timeHelper.convertTimestamp(diff, 'min'), 10);
+        if(minTilTrain == 0) {
+          toPrint += `${nextTrains[trainIndex].routeId} now\n`;
+        } else {
+          toPrint += `${nextTrains[trainIndex].routeId} ${minTilTrain} minutes\n`;
+        }
+        trainsPrinted++;
+      }
+      trainIndex++;
+    }
+
+    console.log(toPrint.trim());
+    this._publisher.publish(toPrint.trim(), {
       'repeat': false,
-      'name': 'hello',
+      'name': 'subway',
       'duration': 5,
       'priority': true
     });
