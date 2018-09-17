@@ -38,6 +38,7 @@ module.exports = class Subway {
 
     console.log(JSON.stringify(nextTrains, null, 2));
 
+    var delay = false;
     while (trainsPrinted <= numTrains && trainIndex < _.size(nextTrains)) {
       var diff = timeHelper.getTimeDif(nextTrains[trainIndex].arrivalTime, null);
       if(diff >= 0) {
@@ -47,6 +48,7 @@ module.exports = class Subway {
         } else {
           toPrint += `${nextTrains[trainIndex].routeId} ${minTilTrain} min\n`;
         }
+        delay = nextTrains[trainIndex].delay != null;
         trainsPrinted++;
       }
       trainIndex++;
@@ -57,7 +59,7 @@ module.exports = class Subway {
       'repeat': false,
       'name': 'subway',
       'duration': 5,
-      'priority': true
+      'priority': delay
     });
   }
 };
