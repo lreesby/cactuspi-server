@@ -45,7 +45,7 @@ module.exports = class Subway {
         if(minTilTrain == 0) {
           toPrint += `${nextTrains[trainIndex].routeId} now\n`;
         } else {
-          toPrint += `${nextTrains[trainIndex].routeId} ${minTilTrain} minutes\n`;
+          toPrint += `${nextTrains[trainIndex].routeId} ${minTilTrain} min\n`;
         }
         trainsPrinted++;
       }
