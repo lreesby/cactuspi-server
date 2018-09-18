@@ -64,7 +64,7 @@ module.exports = class Subway {
       'repeat': false,
       'name': 'subway',
       'duration': 5,
-      'priority': delay
+      'priority': prio
     });
   }
 };
