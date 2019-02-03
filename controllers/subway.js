@@ -39,6 +39,7 @@ module.exports = class Subway {
 
     console.log(JSON.stringify(nextTrains, null, 2));
 
+    var prio = 3;
     while (trainsPrinted <= numTrains && trainIndex < _.size(nextTrains)) {
       var diff = timeHelper.getTimeDif(nextTrains[trainIndex].arrivalTime, null);
       if(diff >= 0) {
@@ -46,7 +47,13 @@ module.exports = class Subway {
         if(minTilTrain == 0) {
           toPrint += `${nextTrains[trainIndex].routeId} now\n`;
         } else {
-          toPrint += `${nextTrains[trainIndex].routeId} ${minTilTrain} minutes\n`;
+          toPrint += `${nextTrains[trainIndex].routeId} ${minTilTrain} min\n`;
+        }
+        if(minTilTrain <= 5) {
+          prio = 1;
+        }
+        else if(minTilTrain <= 10) {
+          prio = prio > 2 ? 2 : prio;
         }
         trainsPrinted++;
       }
@@ -58,7 +65,7 @@ module.exports = class Subway {
       'repeat': false,
       'name': 'subway',
       'duration': 5,
-      'priority': true
+      'priority': prio
     });
   }
 };

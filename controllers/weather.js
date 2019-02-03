@@ -27,16 +27,17 @@ module.exports = class Weather {
         'imperial': 'F'
       };
       const unit = TEMP_UNITS[this._unit];
-      const temperature = `Now: ${Math.round(result.main.temp)}'${unit}. Today ${Math.round(result.main.temp_min)}'${unit} to ${Math.round(result.main.temp_max)}'${unit}.`;
-      const condition = `Forecast: ${result.weather[0].description}. Humidity: ${result.main.humidity}%.`;
-      const message = `${result.name} - ${temperature} ${condition}`;
+      const temperature = `${Math.round(result.main.temp_max)}-${Math.round(result.main.temp_min)}`;
+      const condition = `${result.weather[0].main}`;
+      const message = `${temperature}\n${condition}`;
+      const icon = `http://openweathermap.org/img/w/${result.weather[0].icon}.png`;
 
       console.log('weather', message);
       this._publisher.publish(message, {
         'repeat': false,
         'name': 'weather',
         'duration': 20,
-        'priority': false
+        'priority': icon
       });
     });
   }
