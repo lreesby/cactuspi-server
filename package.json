@@ -18,11 +18,11 @@
   },
   "homepage": "https://github.com/lreesby/cactuspi-server#readme",
   "dependencies": {
-    "express": "^4.16.2",
-    "lodash": "^4.17.10",
+    "express": "^4.16.4",
+    "lodash": "^4.17.11",
     "mta-bustime": "^1.0.0",
     "mta-gtfs-lr": "^1.1.0",
-    "pubnub": "^4.19.0",
-    "request": "^2.83.0"
+    "pubnub": "^4.21.7",
+    "request": "^2.88.0"
   }
 }

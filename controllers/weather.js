@@ -6,10 +6,11 @@ module.exports = class Weather {
     this._city = config.city;
     this._unit = config.unit;
     this._apiKey = config.apiKey;
-    this._weatherUrl = `http://api.openweathermap.org/data/2.5/weather?zip=${this._city}&units=${this._unit}&appid=${this._apiKey}`;
   }
 
-  fetch() {
+  fetch(zipCode) {
+    this._city = zipCode == null ? this._city : zipCode;
+    this._weatherUrl = `http://api.openweathermap.org/data/2.5/weather?zip=${this._city}&units=${this._unit}&appid=${this._apiKey}`;
     request(this._weatherUrl, (err, response, body) => {
       if (err) {
         throw new Error(`Weather: ${err}`);

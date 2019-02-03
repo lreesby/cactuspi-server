@@ -12,9 +12,7 @@ process.on('unhandledRejection', (reason, p) => {
 module.exports = class Subway {
   constructor(config, publisher) {
     this._publisher = publisher;
-    this._lineRef = config.lineRef;
-    this._directionRef = config.directionRef;
-    this._feed_id = config.feed_id;
+    this._config = config;
 
     this._mta = new Mta({
       key: config.key, // only needed for mta.schedule() method
@@ -22,7 +20,10 @@ module.exports = class Subway {
     });
   }
 
-  async fetch() {
+  async fetch(lineRef, direction, feed) {
+    this._lineRef = lineRef == null ? this._config.lineRef : lineRef;
+    this._directionRef = direction == null ? this._config.directionRef : direction;
+    this._feed_id = feed == null ? this._config.feed_id : feed;
     var results;
     await this._mta.schedule(this._lineRef, this._feed_id).then(function (result) {
       results = result;

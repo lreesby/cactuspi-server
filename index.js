@@ -19,7 +19,8 @@ const commandManager = new CommandManager(publisher);
 const app = express();
 
 app.get('/weather', (req, res) => {
-  weather.fetch();
+  var zip = req.param('zip');
+  weather.fetch(zip);
   res.send('Weather fetched');
 });
 
@@ -29,7 +30,11 @@ app.get('/bustime', (req, res) => {
 });
 
 app.get('/subway', (req, res) => {
-  subway.fetch();
+  var lineRef = req.param('line');
+  var direction = req.param('dir');
+  var feed = req.param('feed');
+
+  subway.fetch(lineRef, direction, feed);
   res.send('Subway fetched');
 });
 
