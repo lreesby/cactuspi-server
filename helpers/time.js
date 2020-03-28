@@ -10,7 +10,7 @@ module.exports = class Time {
   }
 
   convertTimestamp(timestamp, form) {
-    var d = new Date(timestamp * 1000);
+    var d = timestamp == null ? new Date(Date.now())  : new Date(timestamp * 1000);
     var yyyy = d.getFullYear();
     var mm = ('0' + (d.getMonth() + 1)).slice(-2);
     var dd = ('0' + d.getDate()).slice(-2);
@@ -39,6 +39,9 @@ module.exports = class Time {
         break;
       case 'min':
         time = min;
+        break;
+      case 'YYYYMMDD':
+        time = yyyy + mm + dd;
         break;
       default:
         time = yyyy + '-' + mm + '-' + dd + ', ' + h + ':' + min + ' ' + ampm;

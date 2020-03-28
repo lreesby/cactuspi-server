@@ -5,6 +5,7 @@ const Publisher = require('./services/publisher');
 const Weather = require('./controllers/weather');
 const Bustime = require('./controllers/bustime');
 const Subway = require('./controllers/subway');
+const Covid = require('./controllers/covid');
 const CommandManager = require('./controllers/command-manager');
 
 const configFile = fs.readFileSync('./config.json');
@@ -14,12 +15,13 @@ const publisher = new Publisher(config.pubnub);
 const weather = new Weather(config.weather, publisher);
 const bustime = new Bustime(config.bustime, publisher);
 const subway = new Subway(config.subway, publisher);
+const covid = new Covid(publisher);
 const commandManager = new CommandManager(publisher);
 
 const app = express();
 
 app.get('/weather', (req, res) => {
-  var zip = req.param('zip');
+  var zip = req.params.zip;
   weather.fetch(zip);
   res.send('Weather fetched');
 });
@@ -30,12 +32,18 @@ app.get('/bustime', (req, res) => {
 });
 
 app.get('/subway', (req, res) => {
-  var lineRef = req.param('line');
-  var direction = req.param('dir');
-  var feed = req.param('feed');
+  var lineRef = req.params.line;
+  var direction = req.params.dir;
+  var feed = req.params.feed;
 
   subway.fetch(lineRef, direction, feed);
   res.send('Subway fetched');
+});
+
+app.get('/covid', (req, res) => {
+  var state = req.params.state;
+  covid.fetchData(state);
+  res.send('Covid fetched');
 });
 
 app.get('/hello', (req, res) => {
