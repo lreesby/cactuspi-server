@@ -8,7 +8,7 @@ module.exports = class Covid {
 
   async fetchData(input) {
     var state = input == null ? 'NY' : input;
-    var covidUrlState = `https://https://covidtracking.com/api/v1/states/${state}/current.json`;
+    var covidUrlState = `https://covidtracking.com/api/v1/states/${state}/current.json`;
     var covidUrlStateDaily = `https://covidtracking.com/api/v1/states/${state}/daily.json`;
     var covidUrlUs = `https://covidtracking.com/api/v1/us/current.json`;
     var covidUrlUsDaily = `https://covidtracking.com/api/v1/us/daily.json`;
