@@ -28,7 +28,7 @@ module.exports = class Covid {
       .then((resp) => resp.json())
       .then(function(data) {
         console.log('covidUrlStateDaily: ' + data[0].positiveIncrease);
-        message += `${data.positiveIncrease},`;
+        message += `${data[0].positiveIncrease},`;
       })
       .catch(function(err) {
         console.log('err: ' + err);
@@ -48,7 +48,7 @@ module.exports = class Covid {
       .then((resp) => resp.json())
       .then(function(data) {
         console.log('covidUrlUsDaily: ' + data[0].positiveIncrease);
-        message += `${data.positiveIncrease},`;
+        message += `${data[0].positiveIncrease},`;
       })
       .catch(function(err) {
         console.log('err: ' + err);
