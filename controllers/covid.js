@@ -1,7 +1,5 @@
 const fetch = require("node-fetch");
 
-var Time = require('../helpers/time');
-
 module.exports = class Covid {
   constructor(publisher) {
     this._publisher = publisher;
@@ -9,14 +7,11 @@ module.exports = class Covid {
   }
 
   async fetchData(input) {
-    const timeHelper = new Time();
-
-    var date = timeHelper.convertTimestamp(null, 'YYYYMMDD');
     var state = input == null ? 'NY' : input;
-    var covidUrlState = `https://covidtracking.com/api/states?state=${state}`;
-    var covidUrlStateDaily = `https://covidtracking.com/api/states/daily?state=${state}&date=${date}`;
-    var covidUrlUs = `https://covidtracking.com/api/us`;
-    var covidUrlUsDaily = `https://covidtracking.com/api/us/daily?date=${date}`;
+    var covidUrlState = `https://https://covidtracking.com/api/v1/states/${state}/current.json`;
+    var covidUrlStateDaily = `https://covidtracking.com/api/v1/states/${state}/daily.json`;
+    var covidUrlUs = `https://covidtracking.com/api/v1/us/current.json`;
+    var covidUrlUsDaily = `https://covidtracking.com/api/v1/us/daily.json`;
 
     let message = '';
     await fetch(covidUrlState)
@@ -32,7 +27,7 @@ module.exports = class Covid {
     await fetch(covidUrlStateDaily)
       .then((resp) => resp.json())
       .then(function(data) {
-        console.log('covidUrlStateDaily: ' + data.positiveIncrease);
+        console.log('covidUrlStateDaily: ' + data[0].positiveIncrease);
         message += `${data.positiveIncrease},`;
       })
       .catch(function(err) {
@@ -52,7 +47,7 @@ module.exports = class Covid {
     await fetch(covidUrlUsDaily)
       .then((resp) => resp.json())
       .then(function(data) {
-        console.log('covidUrlUsDaily: ' + data.positiveIncrease);
+        console.log('covidUrlUsDaily: ' + data[0].positiveIncrease);
         message += `${data.positiveIncrease},`;
       })
       .catch(function(err) {
